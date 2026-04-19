@@ -13,7 +13,10 @@
     {
       "step": 1,
       "name": "knot-webhook",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-19T13:47:21+0900",
+      "summary": "Implemented POST /api/knot/webhook with HMAC-SHA256 verification, transaction classification, DB inserts, and conditional outbox enqueue; added txn_ok EventKind; 4 AC tests pass",
+      "completed_at": "2026-04-19T15:49:00+0900"
     },
     {
       "step": 2,
