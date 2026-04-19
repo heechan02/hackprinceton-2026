@@ -24,7 +24,7 @@
       "status": "completed",
       "started_at": "2026-04-19T13:49:23+0900",
       "summary": "Implemented POST /api/knot/session returning { ok, sessionToken }; added /onboarding placeholder page; typecheck passes",
-      "completed_at": "2026-04-19T13:55:00+0900"
+      "completed_at": "2026-04-19T13:49:58+0900"
     },
     {
       "step": 3,
