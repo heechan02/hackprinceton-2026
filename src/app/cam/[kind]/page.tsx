@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import WebcamCapture from "@/components/cam/WebcamCapture";
 
 const VALID_KINDS = ["pill", "pantry"] as const;
@@ -21,6 +23,13 @@ export default async function CamPage({
   return (
     <main className="min-h-screen bg-stone-50 flex flex-col items-center justify-start py-12 px-4">
       <div className="w-full max-w-xl space-y-6">
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-1 text-sm text-stone-500 hover:text-stone-900 mb-2"
+        >
+          <ChevronLeft size={16} strokeWidth={1.75} />
+          Dashboard
+        </Link>
         <div>
           <h1 className="text-3xl font-semibold text-stone-900">{label} Camera</h1>
           <p className="text-base text-stone-500 mt-1">
@@ -29,7 +38,7 @@ export default async function CamPage({
         </div>
 
         <div className="rounded-lg bg-white border border-stone-200 p-6 shadow-sm">
-          <WebcamCapture kind={camKind} auto={camKind === "pill"} />
+          <WebcamCapture kind={camKind} auto motionThreshold={camKind === "pantry" ? 0.08 : 0.02} />
         </div>
       </div>
     </main>

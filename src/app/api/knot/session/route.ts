@@ -4,13 +4,16 @@ import { env } from "@/lib/env";
 
 export async function POST() {
   try {
-    const data = (await knotFetch("/sessions", {
+    const data = (await knotFetch("/session/create", {
       method: "POST",
-      body: JSON.stringify({ client_id: env.KNOT_CLIENT_ID }),
-    })) as { session_token?: string; token?: string };
+      body: JSON.stringify({
+        external_user_id: "nannycam-patient-1", // TODO: hardcoded sandbox user
+        type: "transaction_link",
+      }),
+    })) as { session?: string };
 
-    const sessionToken = data.session_token ?? data.token ?? "";
-    return NextResponse.json({ ok: true, sessionToken });
+    const sessionId = data.session ?? "";
+    return NextResponse.json({ ok: true, sessionId });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[knot/session] Error:", message);

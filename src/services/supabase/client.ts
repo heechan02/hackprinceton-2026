@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { clientEnv } from "@/lib/env";
+import { clientEnv } from "@/lib/client-env";
 import type { Database } from "@/types/db";
 
 // Anon client — safe for browser use. Read-only in most contexts.

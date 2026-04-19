@@ -164,6 +164,21 @@ export default function OnboardingPage() {
           >
             Go to Dashboard
           </a>
+          <p className="text-sm text-stone-500 mt-2">Then open a camera to start monitoring:</p>
+          <div className="flex gap-3 justify-center">
+            <a
+              href="/cam/pill"
+              className="inline-block rounded-md border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
+            >
+              Pill Cam
+            </a>
+            <a
+              href="/cam/pantry"
+              className="inline-block rounded-md border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
+            >
+              Pantry Cam
+            </a>
+          </div>
         </div>
       </main>
     );

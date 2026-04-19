@@ -1,11 +1,14 @@
 import { adminClient } from "@/services/supabase/admin";
+import Link from "next/link";
 import {
   AlertTriangle,
   CheckCircle,
   Clock,
   Pill,
+  ShoppingBasket,
   ShoppingCart,
   User,
+  Video,
   Wifi,
   WifiOff,
 } from "lucide-react";
@@ -29,38 +32,45 @@ function formatDate(iso: string, timezone: string): string {
   });
 }
 
-export default async function DashboardPage() {
-  // Fetch patient (first one for MVP)
-  const { data: patient } = await adminClient
-    .from("patients")
-    .select("*")
-    .limit(1)
-    .single();
+export const dynamic = "force-dynamic";
 
-  // Fetch today's events
+export default async function DashboardPage() {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
 
-  const { data: events } = await adminClient
-    .from("events")
-    .select("*")
-    .gte("created_at", todayStart.toISOString())
-    .order("created_at", { ascending: false })
-    .limit(50);
-
-  // Fetch system health
-  const { data: systemHealth } = await adminClient
-    .from("system_health")
-    .select("cam_kind, last_heartbeat_at");
+  // Fetch patient, events, and system health in parallel
+  const [{ data: patient }, { data: events }, { data: systemHealth }, { count: txnFlaggedCount }] =
+    await Promise.all([
+      adminClient
+        .from("patients")
+        .select("*")
+        .order("poa_confirmed_at", { ascending: false })
+        .limit(1)
+        .single(),
+      adminClient
+        .from("events")
+        .select("*")
+        .gte("created_at", todayStart.toISOString())
+        .order("created_at", { ascending: false })
+        .limit(50),
+      adminClient
+        .from("system_health")
+        .select("cam_kind, last_heartbeat_at"),
+      adminClient
+        .from("transactions")
+        .select("*", { count: "exact", head: true })
+        .eq("flagged", true),
+    ]);
 
   const STALE_MS = 15 * 60 * 1000;
+  const nowMs = Date.now();
   const healthRows = (systemHealth ?? []).map((row) => ({
     camKind: row.cam_kind,
     lastHeartbeat: row.last_heartbeat_at,
-    online: Date.now() - new Date(row.last_heartbeat_at).getTime() < STALE_MS,
+    online: nowMs - new Date(row.last_heartbeat_at).getTime() < STALE_MS,
   }));
 
-  // Fetch spending rules
+  // Fetch spending rules (depends on patient)
   const { data: rules } = patient
     ? await adminClient
         .from("spending_rules")
@@ -77,7 +87,7 @@ export default async function DashboardPage() {
   // Quick stats
   const medChecks = eventRows.filter((e) => e.kind === "med_check").length;
   const pantryChecks = eventRows.filter((e) => e.kind === "pantry_check").length;
-  const txnFlagged = eventRows.filter((e) => e.kind === "txn_flagged").length;
+  const txnFlagged = txnFlaggedCount ?? 0;
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -105,14 +115,38 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* 2. Today's events feed */}
+        {/* 2. Camera quick-launch */}
+        <div className="rounded-lg bg-white border border-stone-200 p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-4">
+            <Video size={20} strokeWidth={1.75} className="text-stone-500" />
+            <p className="text-base font-medium text-stone-900">Cameras</p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Link
+              href="/cam/pill"
+              className="flex items-center justify-center gap-2 rounded-md border border-stone-200 px-4 py-3 text-sm font-medium text-stone-700 hover:bg-stone-50 hover:border-stone-300 transition-colors"
+            >
+              <Pill size={16} strokeWidth={1.75} />
+              Pill Cam
+            </Link>
+            <Link
+              href="/cam/pantry"
+              className="flex items-center justify-center gap-2 rounded-md border border-stone-200 px-4 py-3 text-sm font-medium text-stone-700 hover:bg-stone-50 hover:border-stone-300 transition-colors"
+            >
+              <ShoppingBasket size={16} strokeWidth={1.75} />
+              Pantry Cam
+            </Link>
+          </div>
+        </div>
+
+        {/* 3. Today's events feed */}
         <EventsFeed
           initialEvents={eventRows}
           timezone={timezone}
           dateLabel={formatDate(now, timezone)}
         />
 
-        {/* 3. Quick stats */}
+        {/* 4. Quick stats */}
         <div className="rounded-lg bg-white border border-stone-200 p-6 shadow-sm">
           <p className="text-base font-medium text-stone-900 mb-4">
             Today at a Glance
@@ -150,7 +184,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* 4. System Status */}
+        {/* 5. System Status */}
         <div className="rounded-lg bg-white border border-stone-200 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
             <Wifi size={20} strokeWidth={1.75} className="text-stone-500" />
@@ -192,7 +226,7 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        {/* 5. Active rules summary */}
+        {/* 6. Active rules summary */}
         <div className="rounded-lg bg-white border border-stone-200 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
             <CheckCircle size={20} strokeWidth={1.75} className="text-stone-500" />

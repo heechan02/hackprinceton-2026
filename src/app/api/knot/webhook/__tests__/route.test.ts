@@ -46,7 +46,14 @@ const fromImpl = (table: string) => {
     };
   }
   if (table === "transactions") {
-    return { insert: vi.fn(() => ({ error: null })) };
+    return {
+      insert: vi.fn(() => ({ error: null })),
+      select: vi.fn(() => ({
+        eq: vi.fn(() => ({
+          limit: vi.fn(() => ({ data: [], error: null })),
+        })),
+      })),
+    };
   }
   if (table === "events") {
     return { insert: mockInsert };

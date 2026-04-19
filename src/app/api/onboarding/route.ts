@@ -118,5 +118,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: rulesError.message }, { status: 500 });
   }
 
+  // Send welcome iMessage
+  await adminClient.from("outbox").insert({
+    recipient_phone: caretakerPhone,
+    body: `👋 NannyCam is now set up for ${name}.\n\nYou'll receive alerts here for:\n• Missed medications\n• Flagged transactions\n• Low pantry items\n\nReply "approve <id>" or "block <id>" to act on flagged transactions.`,
+  });
+
   return NextResponse.json({ ok: true, patientId });
 }
