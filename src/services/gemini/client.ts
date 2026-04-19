@@ -27,6 +27,10 @@ export async function analyzeImage<T>({
   prompt: string;
   schema: z.ZodType<T>;
 }): Promise<T> {
+  const rawData = imageBase64.startsWith("data:")
+    ? (imageBase64.split(",")[1] ?? imageBase64)
+    : imageBase64;
+
   async function attempt(): Promise<string> {
     const response = await ai.models.generateContent({
       model: MODEL_PRIMARY,
@@ -37,7 +41,7 @@ export async function analyzeImage<T>({
             {
               inlineData: {
                 mimeType,
-                data: imageBase64,
+                data: rawData,
               },
             },
             {

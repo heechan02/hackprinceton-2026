@@ -9,7 +9,7 @@
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "agent": "tsx src/agent/worker.ts"
+    "agent": "bun src/agent/worker.ts"
   },
   "dependencies": {
     "@google/genai": "^1.50.1",
