@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 interface WebcamCaptureProps {
   kind: "pill" | "pantry";
   auto?: boolean;
+  motionThreshold?: number;
 }
 
 type Status =
@@ -13,9 +14,11 @@ type Status =
   | { type: "ok"; summary: string }
   | { type: "error"; message: string };
 
-export default function WebcamCapture({ kind, auto = false }: WebcamCaptureProps) {
+export default function WebcamCapture({ kind, auto = false, motionThreshold = 0.02 }: WebcamCaptureProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const prevFrameRef = useRef<ImageData | null>(null);
+  const lastMotionRef = useRef<number>(Date.now());
   const [status, setStatus] = useState<Status>({ type: "idle" });
   const [cameraReady, setCameraReady] = useState(false);
 
@@ -72,10 +75,46 @@ export default function WebcamCapture({ kind, auto = false }: WebcamCaptureProps
 
   useEffect(() => {
     if (!auto || !cameraReady) return;
-    const id = setInterval(capture, 60_000);
+
+    function getFrameData(): ImageData | null {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      if (!video || !canvas || video.videoWidth === 0) return null;
+      const w = video.videoWidth;
+      const h = video.videoHeight;
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(video, 0, 0);
+      return ctx.getImageData(0, 0, w, h);
+    }
+
+    function hasMotion(a: ImageData, b: ImageData): boolean {
+      const total = a.data.length / 4;
+      let changed = 0;
+      for (let i = 0; i < a.data.length; i += 4) {
+        const ba = (a.data[i]! + a.data[i + 1]! + a.data[i + 2]!) / 3;
+        const bb = (b.data[i]! + b.data[i + 1]! + b.data[i + 2]!) / 3;
+        if (Math.abs(ba - bb) > 30) changed++;
+      }
+      return changed / total > motionThreshold;
+    }
+
+    const id = setInterval(() => {
+      const frame = getFrameData();
+      if (!frame) return;
+      const prev = prevFrameRef.current;
+      prevFrameRef.current = frame;
+      if (!prev) return;
+      if (hasMotion(prev, frame)) {
+        lastMotionRef.current = Date.now();
+        capture();
+      }
+    }, 2_000);
+
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auto, cameraReady]);
+  }, [auto, cameraReady, motionThreshold]);
 
   return (
     <div className="space-y-4">
