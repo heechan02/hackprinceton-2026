@@ -18,7 +18,7 @@ export default function WebcamCapture({ kind, auto = false, motionThreshold = 0.
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prevFrameRef = useRef<ImageData | null>(null);
-  const lastMotionRef = useRef<number>(Date.now());
+  const lastMotionRef = useRef<number>(0);
   const lastScheduledCaptureRef = useRef<string | null>(null);
   const [status, setStatus] = useState<Status>({ type: "idle" });
   const [cameraReady, setCameraReady] = useState(false);
@@ -108,8 +108,11 @@ export default function WebcamCapture({ kind, auto = false, motionThreshold = 0.
       prevFrameRef.current = frame;
       if (!prev) return;
       if (hasMotion(prev, frame)) {
-        lastMotionRef.current = Date.now();
-        capture();
+        const now = Date.now();
+        if (now - lastMotionRef.current > 60_000) {
+          lastMotionRef.current = now;
+          capture();
+        }
       }
     }, 2_000);
 

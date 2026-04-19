@@ -5,6 +5,7 @@
 Implement `GET /api/cron/nightly-summary/route.ts`.
 
 This route:
+
 1. Loads all `events` rows from today (midnight to now) for the active patient
 2. Builds a plain-text summary prompt and calls Gemini (`gemini/client.ts`) to produce a one-paragraph natural-language day summary
 3. Enqueues the summary via `services/outbox.enqueueMessage`
