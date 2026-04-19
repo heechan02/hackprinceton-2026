@@ -16,5 +16,10 @@ export async function enqueueMessage(opts: {
     .single();
 
   if (error) throw new Error(`[outbox] Failed to enqueue: ${error.message}`);
+
+  // Fire-and-forget flush so messages send immediately without the worker
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  fetch(`${baseUrl}/api/cron/flush-outbox`, { method: "POST" }).catch(() => {});
+
   return data.id;
 }

@@ -49,7 +49,7 @@ export default function KnotActions({
       knotapi.open({
         sessionId: data.sessionId,
         clientId: process.env.NEXT_PUBLIC_KNOT_CLIENT_ID ?? "",
-        environment: "production",
+        environment: "development",
         merchantIds: MERCHANT_IDS,
         entryPoint: "onboarding",
         useCategories: true,
