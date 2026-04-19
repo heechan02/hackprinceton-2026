@@ -1,0 +1,7 @@
+{
+  "step": 1,
+  "name": "env-validation",
+  "exitCode": 0,
+  "stdout": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":48689,\"duration_api_ms\":46625,\"num_turns\":14,\"result\":\"Step 1 complete. `src/lib/env.ts` now:\\n- Parses all env vars through a Zod schema at import time\\n- Throws `[env] Missing or invalid environment variables: <key>` if anything required is absent\\n- Exports `env` (server-only, all secrets) and `clientEnv` (only `NEXT_PUBLIC_*` keys)\\n- 4 tests passing covering happy path, missing key error, and clientEnv isolation\",\"stop_reason\":null,\"session_id\":\"666f22a8-52f1-4501-bca4-dd87f70d8224\",\"total_cost_usd\":0.37534175000000003,\"usage\":{\"input_tokens\":14,\"cache_creation_input_tokens\":14755,\"cache_read_input_tokens\":375256,\"output_tokens\":3817,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":14755},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-4-6\":{\"inputTokens\":14,\"outputTokens\":3817,\"cacheReadInputTokens\":375256,\"cacheCreationInputTokens\":14755,\"webSearchRequests\":0,\"costUSD\":0.37534175000000003,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"fast_mode_state\":\"off\",\"uuid\":\"422d4f03-b31f-47b9-925d-c24c82c16fbb\"}\n",
+  "stderr": ""
+}
