@@ -1,0 +1,7 @@
+{
+  "step": 4,
+  "name": "smoke-e2e",
+  "exitCode": 0,
+  "stdout": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":31066,\"duration_api_ms\":28091,\"num_turns\":8,\"result\":\"Step 4 complete:\\n\\n- `npm run typecheck` — 0 errors\\n- `npm test` — 6 files, 27 tests, all passed\\n- Created `demos/phase-1-smoke.md` documenting all 5 verification checks\\n- Step marked `completed` in `index.json`\",\"stop_reason\":null,\"session_id\":\"d0292080-896e-46bb-a36c-e5d1d9194009\",\"total_cost_usd\":0.20775275,\"usage\":{\"input_tokens\":8,\"cache_creation_input_tokens\":11501,\"cache_read_input_tokens\":188363,\"output_tokens\":1666,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":11501},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-4-6\":{\"inputTokens\":8,\"outputTokens\":1666,\"cacheReadInputTokens\":188363,\"cacheCreationInputTokens\":11501,\"webSearchRequests\":0,\"costUSD\":0.20775275,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"fast_mode_state\":\"off\",\"uuid\":\"0f9d605b-ecf5-4465-ba03-358624056c50\"}\n",
+  "stderr": ""
+}

@@ -40,7 +40,7 @@
       "status": "completed",
       "started_at": "2026-04-19T13:39:04+0900",
       "summary": "Typecheck and all 27 tests pass; documented phase 1 smoke results in demos/phase-1-smoke.md covering schedule API, nightly-summary cron, and /cam/pill page.",
-      "completed_at": "2026-04-19T13:40:00+0900"
+      "completed_at": "2026-04-19T13:39:35+0900"
     }
   ],
   "created_at": "2026-04-19T13:35:40+0900"
