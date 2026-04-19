@@ -16,7 +16,7 @@
       "status": "completed",
       "started_at": "2026-04-19T13:36:26+0900",
       "summary": "Added GET /api/patient/schedule returning active patient dose times; WebcamCapture polls every 60s on pill cam, captures within ±10 min of any dose_time, deduplicates per window via lastScheduledCaptureRef.",
-      "completed_at": "2026-04-19T13:50:00+0900"
+      "completed_at": "2026-04-19T13:37:22+0900"
     },
     {
       "step": 2,
