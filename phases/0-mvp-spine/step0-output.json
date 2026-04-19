@@ -1,7 +1,7 @@
 {
   "step": 0,
   "name": "bootstrap",
-  "exitCode": 1,
-  "stdout": "",
-  "stderr": "Error: Claude Code cannot be launched inside another Claude Code session.\nNested sessions share runtime resources and will crash all active sessions.\nTo bypass this check, unset the CLAUDECODE environment variable.\n"
+  "exitCode": 0,
+  "stdout": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":268764,\"duration_api_ms\":180754,\"num_turns\":75,\"result\":\"Step 0 complete. All AC checks pass:\\n\\n- `npm run build` — ✅ succeeds\\n- `npm run typecheck` — ✅ no errors\\n- `npm run lint` — ✅ no errors  \\n- `npm run test` — ✅ \\\"no tests found\\\" exits 0 (`passWithNoTests: true`)\\n- Directory scaffold created with `.gitkeep` files\\n- `.env.example` with all required keys\\n- `.env.local` covered by `.env*` in `.gitignore`\\n- `tsconfig.json` has `strict: true` and `noUncheckedIndexedAccess: true`\\n- `phases/0-mvp-spine/index.json` updated to `\\\"completed\\\"`\",\"stop_reason\":null,\"session_id\":\"52543969-7f67-4234-9e69-7c2c5f8dc050\",\"total_cost_usd\":2.01084525,\"usage\":{\"input_tokens\":65,\"cache_creation_input_tokens\":58637,\"cache_read_input_tokens\":2764578,\"output_tokens\":10470,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":58637},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-4-6\":{\"inputTokens\":65,\"outputTokens\":10470,\"cacheReadInputTokens\":2764578,\"cacheCreationInputTokens\":58637,\"webSearchRequests\":0,\"costUSD\":2.01084525,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"fast_mode_state\":\"off\",\"uuid\":\"f8f209d3-dac4-4c3b-806f-ebba1410fa86\"}\n",
+  "stderr": ""
 }

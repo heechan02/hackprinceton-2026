@@ -7,7 +7,8 @@
       "name": "bootstrap",
       "status": "completed",
       "started_at": "2026-04-19T10:45:35+0900",
-      "summary": "Next.js 15 + TypeScript strict + Tailwind bootstrapped with full directory scaffold, env.example, vitest config, and all AC checks passing"
+      "summary": "Next.js 15 + TypeScript strict + Tailwind bootstrapped with full directory scaffold, env.example, vitest config, and all AC checks passing",
+      "completed_at": "2026-04-19T10:53:25+0900"
     },
     {
       "step": 1,
