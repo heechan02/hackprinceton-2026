@@ -29,7 +29,9 @@
     {
       "step": 3,
       "name": "photon-outbound",
-      "status": "pending"
+      "status": "blocked",
+      "started_at": "2026-04-19T11:37:36+0900",
+      "blocked_reason": "Spectrum returned 'Target not allowed for this project' when sending to CARETAKER_PHONE. Code is correct and typecheck passes. Fix: in the Photon dashboard, ensure iMessage is enabled for the project and the target phone number is not restricted. Error from smoke-photon.ts: sendToPhone returned { ok: false, error: 'Target not allowed for this project' }."
     },
     {
       "step": 4,
