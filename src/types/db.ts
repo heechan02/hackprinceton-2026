@@ -1,4 +1,4 @@
-export type EventKind = 'med_check' | 'pantry_check' | 'reorder' | 'txn_flagged' | 'txn_ok' | 'system';
+export type EventKind = 'med_check' | 'pantry_check' | 'reorder' | 'reorder_placed' | 'reorder_pending_approval' | 'txn_flagged' | 'txn_ok' | 'system';
 export type EventStatus = 'pending' | 'in_progress' | 'completed' | 'approved' | 'blocked' | 'failed';
 export type OutboxStatus = 'pending' | 'sending' | 'sent' | 'failed';
 

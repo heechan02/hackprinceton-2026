@@ -29,7 +29,10 @@
     {
       "step": 3,
       "name": "pantry-reorder",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-19T13:49:58+0900",
+      "summary": "Added reorder logic to pantry capture: low/empty items trigger syncCart+checkout or approval-request iMessage if total >2× max_single_txn; reorder_placed/reorder_pending_approval events inserted; typecheck passes",
+      "completed_at": "2026-04-19T14:10:00+0900"
     },
     {
       "step": 4,
