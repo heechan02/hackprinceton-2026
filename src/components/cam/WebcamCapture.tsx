@@ -23,6 +23,21 @@ export default function WebcamCapture({ kind, auto = false, motionThreshold = 0.
   const [status, setStatus] = useState<Status>({ type: "idle" });
   const [cameraReady, setCameraReady] = useState(false);
 
+  // Heartbeat: POST /api/health/heartbeat every 60s when camera is active
+  useEffect(() => {
+    if (!cameraReady) return;
+    function sendHeartbeat() {
+      fetch("/api/health/heartbeat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ camKind: kind }),
+      }).catch(() => {});
+    }
+    sendHeartbeat();
+    const id = setInterval(sendHeartbeat, 60_000);
+    return () => clearInterval(id);
+  }, [cameraReady, kind]);
+
   useEffect(() => {
     let stream: MediaStream | null = null;
 

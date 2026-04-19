@@ -29,7 +29,10 @@
     {
       "step": 3,
       "name": "health-check-cron",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-19T14:08:17+0900",
+      "summary": "Added 60s heartbeat writes from WebcamCapture to POST /api/health/heartbeat; GET /api/cron/health-check alerts caretaker for stale cams; System Status card on dashboard shows each cam's last heartbeat and online/offline pill.",
+      "completed_at": "2026-04-19T14:10:00+0900"
     },
     {
       "step": 4,

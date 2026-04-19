@@ -6,6 +6,8 @@ import {
   Pill,
   ShoppingCart,
   User,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import EventsFeed, { type EventRow } from "@/components/dashboard/EventsFeed";
 
@@ -45,6 +47,18 @@ export default async function DashboardPage() {
     .gte("created_at", todayStart.toISOString())
     .order("created_at", { ascending: false })
     .limit(50);
+
+  // Fetch system health
+  const { data: systemHealth } = await adminClient
+    .from("system_health")
+    .select("cam_kind, last_heartbeat_at");
+
+  const STALE_MS = 15 * 60 * 1000;
+  const healthRows = (systemHealth ?? []).map((row) => ({
+    camKind: row.cam_kind,
+    lastHeartbeat: row.last_heartbeat_at,
+    online: Date.now() - new Date(row.last_heartbeat_at).getTime() < STALE_MS,
+  }));
 
   // Fetch spending rules
   const { data: rules } = patient
@@ -136,7 +150,49 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* 4. Active rules summary */}
+        {/* 4. System Status */}
+        <div className="rounded-lg bg-white border border-stone-200 p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-4">
+            <Wifi size={20} strokeWidth={1.75} className="text-stone-500" />
+            <p className="text-base font-medium text-stone-900">System Status</p>
+          </div>
+          {healthRows.length === 0 ? (
+            <p className="text-base text-stone-500">No cameras have reported in yet.</p>
+          ) : (
+            <ul className="space-y-3">
+              {healthRows.map((row) => (
+                <li key={row.camKind} className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {row.online ? (
+                      <Wifi size={20} strokeWidth={1.75} className="text-green-700" />
+                    ) : (
+                      <WifiOff size={20} strokeWidth={1.75} className="text-red-700" />
+                    )}
+                    <span className="text-base text-stone-700 capitalize">
+                      {row.camKind} cam
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-stone-500">
+                      {formatTime(row.lastHeartbeat, timezone)}
+                    </span>
+                    <span
+                      className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${
+                        row.online
+                          ? "bg-green-50 text-green-700"
+                          : "bg-red-50 text-red-700"
+                      }`}
+                    >
+                      {row.online ? "Online" : "Offline"}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* 5. Active rules summary */}
         <div className="rounded-lg bg-white border border-stone-200 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
             <CheckCircle size={20} strokeWidth={1.75} className="text-stone-500" />
