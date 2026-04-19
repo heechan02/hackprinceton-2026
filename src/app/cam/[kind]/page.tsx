@@ -29,7 +29,7 @@ export default async function CamPage({
         </div>
 
         <div className="rounded-lg bg-white border border-stone-200 p-6 shadow-sm">
-          <WebcamCapture kind={camKind} auto={false} />
+          <WebcamCapture kind={camKind} auto={camKind === "pill"} />
         </div>
       </div>
     </main>

@@ -19,6 +19,7 @@ export default function WebcamCapture({ kind, auto = false, motionThreshold = 0.
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prevFrameRef = useRef<ImageData | null>(null);
   const lastMotionRef = useRef<number>(Date.now());
+  const lastScheduledCaptureRef = useRef<string | null>(null);
   const [status, setStatus] = useState<Status>({ type: "idle" });
   const [cameraReady, setCameraReady] = useState(false);
 
@@ -115,6 +116,42 @@ export default function WebcamCapture({ kind, auto = false, motionThreshold = 0.
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auto, cameraReady, motionThreshold]);
+
+  // Schedule-triggered capture — pill cam only, ±10 min around each dose_time
+  useEffect(() => {
+    if (!auto || kind !== "pill" || !cameraReady) return;
+
+    async function fetchAndCheck() {
+      let doseTimes: string[] = [];
+      try {
+        const res = await fetch("/api/patient/schedule");
+        const json = await res.json();
+        if (json.ok) doseTimes = json.doseTimes as string[];
+      } catch {
+        return;
+      }
+
+      const now = new Date();
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+      for (const t of doseTimes) {
+        const [hStr, mStr] = t.split(":");
+        const doseMinutes = parseInt(hStr!, 10) * 60 + parseInt(mStr!, 10);
+        if (Math.abs(nowMinutes - doseMinutes) <= 10) {
+          // deduplicate: one capture per dose window (keyed as "HH:MM")
+          if (lastScheduledCaptureRef.current !== t) {
+            lastScheduledCaptureRef.current = t;
+            capture();
+          }
+          break;
+        }
+      }
+    }
+
+    const id = setInterval(fetchAndCheck, 60_000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auto, kind, cameraReady]);
 
   return (
     <div className="space-y-4">
