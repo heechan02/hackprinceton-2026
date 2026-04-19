@@ -1,0 +1,7 @@
+{
+  "step": 0,
+  "name": "bootstrap",
+  "exitCode": 1,
+  "stdout": "",
+  "stderr": "Error: Claude Code cannot be launched inside another Claude Code session.\nNested sessions share runtime resources and will crash all active sessions.\nTo bypass this check, unset the CLAUDECODE environment variable.\n"
+}

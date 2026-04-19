@@ -1,0 +1,21 @@
+{
+  "project": "NannyCam",
+  "phases": [
+    {
+      "dir": "0-mvp-spine",
+      "status": "pending"
+    },
+    {
+      "dir": "1-vision-meds",
+      "status": "pending"
+    },
+    {
+      "dir": "2-commerce-billprotector",
+      "status": "pending"
+    },
+    {
+      "dir": "3-dashboard-polish",
+      "status": "pending"
+    }
+  ]
+}

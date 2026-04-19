@@ -1,0 +1,44 @@
+{
+  "project": "NannyCam",
+  "phase": "mvp-spine",
+  "steps": [
+    {
+      "step": 0,
+      "name": "bootstrap",
+      "status": "completed",
+      "started_at": "2026-04-19T10:45:35+0900",
+      "summary": "Next.js 15 + TypeScript strict + Tailwind bootstrapped with full directory scaffold, env.example, vitest config, and all AC checks passing"
+    },
+    {
+      "step": 1,
+      "name": "env-validation",
+      "status": "pending"
+    },
+    {
+      "step": 2,
+      "name": "supabase-schema",
+      "status": "pending"
+    },
+    {
+      "step": 3,
+      "name": "photon-outbound",
+      "status": "pending"
+    },
+    {
+      "step": 4,
+      "name": "photon-inbound",
+      "status": "pending"
+    },
+    {
+      "step": 5,
+      "name": "gemini-wrapper",
+      "status": "pending"
+    },
+    {
+      "step": 6,
+      "name": "smoke-e2e",
+      "status": "pending"
+    }
+  ],
+  "created_at": "2026-04-19T10:45:35+0900"
+}
