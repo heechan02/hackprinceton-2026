@@ -29,7 +29,10 @@
     {
       "step": 3,
       "name": "nightly-summary-cron",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-19T13:38:28+0900",
+      "summary": "Implemented GET /api/cron/nightly-summary: loads today's events, calls Gemini for a one-paragraph summary (or returns quiet-day fallback), enqueues outbox message, returns { ok, summary }.",
+      "completed_at": "2026-04-19T13:39:30+0900"
     },
     {
       "step": 4,
