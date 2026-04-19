@@ -1,0 +1,17 @@
+# Phase 0 Smoke Test — Demo Recording Instructions
+
+Record a screen capture (≥20 seconds) showing the following, then save as `demos/phase-0-smoke.mp4`:
+
+1. Open http://localhost:3000/cam/pill in a browser. Grant webcam permission. The live video preview should appear.
+2. Click "Capture & analyze". The button label changes to "Analyzing…".
+3. After ~5–10 seconds, a green "✓ <summary>" message appears below the button.
+4. Switch to the Supabase dashboard → Table Editor → `events`. A new row with `kind = 'med_check'` should be visible.
+5. Show the `snapshot_url` column for that row — it should be a public https:// URL pointing to the uploaded JPEG.
+6. Switch to the `outbox` table. The row should have `status = 'sent'` (or `pending` if the worker is still processing).
+7. Show the caretaker iPhone screen receiving the iMessage with the snapshot attached.
+
+**Prerequisites for recording:**
+- `npm run dev` running (terminal 1)
+- `npm run agent` running (terminal 2)
+- Valid .env.local with all required keys
+- Supabase `snapshots` bucket created (run 0003_storage.sql in Supabase dashboard SQL editor)
