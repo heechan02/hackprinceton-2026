@@ -18,7 +18,8 @@
     },
     {
       "dir": "3-dashboard-polish",
-      "status": "pending"
+      "status": "completed",
+      "completed_at": "2026-04-19T14:11:09+0900"
     }
   ]
 }
