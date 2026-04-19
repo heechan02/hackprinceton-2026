@@ -24,7 +24,7 @@
       "status": "completed",
       "started_at": "2026-04-19T10:54:15+0900",
       "summary": "0001_init.sql migration creates all tables + enums + indices; admin.ts and client.ts typed against Database; seed.sql inserts one patient, one prescription, three inventory items, one spending rule; typecheck passes",
-      "completed_at": "2026-04-18T00:00:00Z"
+      "completed_at": "2026-04-19T10:55:47+0900"
     },
     {
       "step": 3,
