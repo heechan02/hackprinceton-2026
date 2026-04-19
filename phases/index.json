@@ -8,7 +8,8 @@
     },
     {
       "dir": "1-vision-meds",
-      "status": "pending"
+      "status": "completed",
+      "completed_at": "2026-04-19T13:39:35+0900"
     },
     {
       "dir": "2-commerce-billprotector",
