@@ -16,8 +16,6 @@ import {
   MessageCircle,
   Shield,
   Eye,
-  Scissors,
-  Video,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -77,73 +75,6 @@ function FadeIn({
 }
 
 /** Splice marker — a full-screen card telling you to cut in real footage */
-function SpliceMarker({
-  icon,
-  title,
-  subtitle,
-  instructions,
-  duration,
-  progress,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  subtitle: string;
-  instructions: string[];
-  duration: string;
-  progress: number;
-}) {
-  return (
-    <div className="flex flex-col items-center justify-center h-full px-8">
-      <FadeIn show={progress > 0.02}>
-        <div className="bg-white rounded-2xl border-2 border-dashed border-stone-300 shadow-lg p-10 max-w-lg w-full text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Scissors size={16} className="text-stone-400" />
-            <span className="text-xs font-medium uppercase tracking-wider text-stone-400">
-              Splice in real footage
-            </span>
-            <Scissors size={16} className="text-stone-400 scale-x-[-1]" />
-          </div>
-
-          <div className="w-16 h-16 rounded-2xl bg-stone-100 flex items-center justify-center mx-auto mt-6 mb-4">
-            {icon}
-          </div>
-          <h2 className="text-3xl font-bold text-stone-900 mb-1">{title}</h2>
-          <p className="text-base text-stone-500 mb-6">{subtitle}</p>
-
-          <div className="text-left bg-stone-50 rounded-lg p-4 space-y-2">
-            {instructions.map((inst, i) => (
-              <FadeIn key={i} show={progress > 0.1 + i * 0.15} delay={0}>
-                <div className="flex items-start gap-2">
-                  <span className="text-xs font-bold text-stone-400 mt-0.5 shrink-0 w-5">
-                    {i + 1}.
-                  </span>
-                  <p className="text-sm text-stone-600">{inst}</p>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-
-          <p className="mt-4 text-xs text-stone-400">
-            Target duration: <span className="font-medium">{duration}</span>
-          </p>
-        </div>
-      </FadeIn>
-
-      {/* Countdown bar at bottom */}
-      <div className="mt-6 w-64">
-        <div className="h-1 bg-stone-200 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-stone-400 rounded-full transition-all duration-100"
-            style={{ width: `${progress * 100}%` }}
-          />
-        </div>
-        <p className="text-xs text-stone-400 text-center mt-1">
-          {Math.ceil((1 - progress) * 5)}s until next scene
-        </p>
-      </div>
-    </div>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /*  Scene 1: Title + Problem  (0:00 — 0:15)                           */
@@ -487,47 +418,330 @@ const OnboardingScene: Scene["component"] = ({ progress }) => {
 };
 
 /* ------------------------------------------------------------------ */
-/*  Scene 3: Splice — Pill Cam  (0:40 — 1:00)                        */
+/*  Scene 3: Pill Cam — Animated  (0:35 — 0:55, 20s)                 */
 /* ------------------------------------------------------------------ */
 
-const PillCamSplice: Scene["component"] = ({ progress }) => (
-  <SpliceMarker
-    icon={<Pill size={32} className="text-blue-600" />}
-    title="Pill Cam Demo"
-    subtitle="Screen-record laptop + iPhone screen recording"
-    instructions={[
-      "From success screen or dashboard, click \"Pill Cam\"",
-      "Point laptop webcam at real pill organizer on table",
-      "Hit \"Capture & Analyze\" — wait 3-4s for Gemini",
-      "Show green result on screen",
-      "CUT TO phone: iMessage arrives with medication confirmation",
-      "CUT TO dashboard: event appears in feed real-time",
-    ]}
-    duration="~20s"
-    progress={progress}
-  />
-);
+const PillCamScene: Scene["component"] = ({ progress }) => {
+  // Phase 1: Dashboard click (0–0.1)
+  // Phase 2: Camera view with pill organizer (0.1–0.3)
+  // Phase 3: Capture & analyze (0.3–0.55)
+  // Phase 4: Green result (0.55–0.75)
+  // Phase 5: iMessage arrives (0.75–1.0)
+
+  const showDash = progress > 0.01;
+  const showCam = progress > 0.12;
+  const showCapture = progress > 0.3;
+  const showAnalyzing = progress > 0.35;
+  const showResult = progress > 0.55;
+  const showIMsg = progress > 0.75;
+
+  return (
+    <div className="flex flex-col items-center justify-start h-full px-8 pt-6 overflow-hidden">
+      <FadeIn show={showDash}>
+        <h2 className="text-3xl font-bold text-stone-900 text-center mb-1">Pill Cam</h2>
+        <p className="text-sm text-stone-500 text-center mb-6">
+          Gemini Vision verifies medication was taken from the correct compartment
+        </p>
+      </FadeIn>
+
+      <div className="flex gap-6 max-w-4xl w-full">
+        {/* Left: Camera UI */}
+        <div className="flex-1 space-y-4">
+          {/* Dashboard quick-launch */}
+          <FadeIn show={showDash} delay={0}>
+            <div className="bg-white rounded-xl border border-stone-200 p-4 shadow-sm">
+              <p className="text-xs font-medium uppercase tracking-wider text-stone-400 mb-3">Dashboard</p>
+              <div className="flex gap-3">
+                <div className={`flex items-center gap-2 rounded-md border px-4 py-2.5 text-sm font-medium transition-all duration-500 ${
+                  showCam ? "border-blue-500 bg-blue-50 text-blue-700 scale-105" : "border-stone-200 text-stone-700"
+                }`}>
+                  <Pill size={16} /> Pill Cam
+                </div>
+                <div className="flex items-center gap-2 rounded-md border border-stone-200 px-4 py-2.5 text-sm font-medium text-stone-400">
+                  <ShoppingBasket size={16} /> Pantry Cam
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+
+          {/* Camera feed mockup */}
+          {showCam && (
+            <FadeIn show delay={0}>
+              <div className="bg-stone-900 rounded-xl border border-stone-700 overflow-hidden shadow-lg">
+                {/* Camera header */}
+                <div className="px-4 py-2 flex items-center gap-2 border-b border-stone-700">
+                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  <span className="text-xs text-stone-400 font-medium">LIVE — Pill Cam</span>
+                  <span className="text-xs text-stone-500 ml-auto">08:01 AM</span>
+                </div>
+                {/* Fake camera view — pill organizer illustration */}
+                <div className="p-6 flex items-center justify-center min-h-[180px]">
+                  <div className="flex gap-1">
+                    {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, i) => (
+                      <div key={day} className="flex flex-col items-center gap-1">
+                        <span className="text-[10px] text-stone-500">{day}</span>
+                        <div className={`w-10 h-14 rounded-md border flex items-center justify-center transition-all duration-700 ${
+                          i === 2 && showResult
+                            ? "border-green-500 bg-green-900/30"  // Wednesday — emptied
+                            : i < 2
+                            ? "border-stone-600 bg-stone-800/50"  // Past days — empty
+                            : "border-stone-600 bg-stone-800"     // Future — has pills
+                        }`}>
+                          {i === 2 && showResult ? (
+                            <Check size={16} className="text-green-400" />
+                          ) : i < 2 ? (
+                            <span className="text-stone-600 text-xs">—</span>
+                          ) : (
+                            <div className="flex flex-col gap-0.5">
+                              <div className="w-3 h-2 rounded-full bg-blue-400/70" />
+                              <div className="w-3 h-2 rounded-full bg-pink-400/70" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Capture button */}
+                <div className="px-4 py-3 border-t border-stone-700 flex justify-center">
+                  <div className={`flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-medium transition-all duration-500 ${
+                    showCapture
+                      ? showResult
+                        ? "bg-green-600 text-white"
+                        : "bg-amber-500 text-white animate-pulse"
+                      : "bg-white text-stone-900 hover:bg-stone-100"
+                  }`}>
+                    <Camera size={16} />
+                    {showResult ? "Analysis Complete" : showAnalyzing ? "Analyzing..." : "Capture & Analyze"}
+                  </div>
+                </div>
+
+                {/* Analysis result */}
+                {showResult && (
+                  <FadeIn show delay={0}>
+                    <div className="px-4 pb-4">
+                      <div className="rounded-lg bg-green-900/40 border border-green-700/50 p-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          <CheckCircle size={16} className="text-green-400" />
+                          <span className="text-sm font-medium text-green-300">Wednesday compartment empty</span>
+                        </div>
+                        <p className="text-xs text-green-400/70 ml-6">
+                          Aricept 10mg — 8:00 AM dose confirmed taken
+                        </p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                )}
+              </div>
+            </FadeIn>
+          )}
+        </div>
+
+        {/* Right: iMessage notification */}
+        <div className="w-72 shrink-0">
+          {showIMsg && (
+            <FadeIn show delay={0}>
+              <div className="bg-stone-100 rounded-2xl border border-stone-300 shadow-lg overflow-hidden">
+                <div className="bg-stone-200 px-4 py-2.5 flex items-center gap-2.5 border-b border-stone-300">
+                  <div className="w-7 h-7 rounded-full bg-stone-900 flex items-center justify-center">
+                    <MessageCircle size={14} className="text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-stone-900">NannyCam</p>
+                    <p className="text-[10px] text-stone-500">iMessage</p>
+                  </div>
+                </div>
+                <div className="p-3 space-y-2.5 min-h-[160px]">
+                  <div className="flex justify-start">
+                    <div className="max-w-[88%] rounded-2xl rounded-bl-md bg-white border border-stone-200 px-3 py-2 text-xs leading-relaxed text-stone-800">
+                      <p className="font-semibold text-green-600 mb-1">Medication Confirmed</p>
+                      <p>Margaret took her 8:00 AM dose.</p>
+                      <p className="text-stone-500 mt-1">Aricept 10mg — Wednesday compartment empty.</p>
+                      <p className="text-stone-400 mt-2 text-[10px]">8:01 AM</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 /* ------------------------------------------------------------------ */
-/*  Scene 4: Splice — Pantry Cam  (1:00 — 1:20)                      */
+/*  Scene 4: Pantry Cam — Animated  (0:55 — 1:15, 20s)               */
 /* ------------------------------------------------------------------ */
 
-const PantryCamSplice: Scene["component"] = ({ progress }) => (
-  <SpliceMarker
-    icon={<ShoppingBasket size={32} className="text-amber-600" />}
-    title="Pantry Cam Demo"
-    subtitle="Screen-record laptop + iPhone screen recording"
-    instructions={[
-      "Open /cam/pantry from dashboard",
-      "Point webcam at shelf with a few items (one empty spot)",
-      "Hit \"Capture & Analyze\" — Gemini detects low/empty items",
-      "CUT TO phone: iMessage — \"Pantry check: rice low, cereal empty\"",
-      "CUT TO dashboard: reorder event appears in feed",
-    ]}
-    duration="~20s"
-    progress={progress}
-  />
-);
+const PantryCamScene: Scene["component"] = ({ progress }) => {
+  const showTitle = progress > 0.01;
+  const showCam = progress > 0.1;
+  const showCapture = progress > 0.28;
+  const showAnalyzing = progress > 0.33;
+  const showResult = progress > 0.5;
+  const showReorder = progress > 0.65;
+  const showIMsg = progress > 0.78;
+
+  const items = [
+    { name: "Rice", status: "low", emoji: "🍚" },
+    { name: "Cereal", status: "empty", emoji: "🥣" },
+    { name: "Pasta", status: "ok", emoji: "🍝" },
+    { name: "Bread", status: "ok", emoji: "🍞" },
+    { name: "Oats", status: "low", emoji: "🫘" },
+  ];
+
+  return (
+    <div className="flex flex-col items-center justify-start h-full px-8 pt-6 overflow-hidden">
+      <FadeIn show={showTitle}>
+        <h2 className="text-3xl font-bold text-stone-900 text-center mb-1">Pantry Cam</h2>
+        <p className="text-sm text-stone-500 text-center mb-6">
+          Gemini Vision detects low stock — Knot AgenticShopping auto-reorders from Walmart
+        </p>
+      </FadeIn>
+
+      <div className="flex gap-6 max-w-4xl w-full">
+        {/* Left: Camera + Results */}
+        <div className="flex-1 space-y-4">
+          {/* Camera feed mockup */}
+          {showCam && (
+            <FadeIn show delay={0}>
+              <div className="bg-stone-900 rounded-xl border border-stone-700 overflow-hidden shadow-lg">
+                <div className="px-4 py-2 flex items-center gap-2 border-b border-stone-700">
+                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  <span className="text-xs text-stone-400 font-medium">LIVE — Pantry Cam</span>
+                  <span className="text-xs text-stone-500 ml-auto">10:30 AM</span>
+                </div>
+                {/* Shelf illustration */}
+                <div className="p-4 min-h-[140px]">
+                  <div className="grid grid-cols-5 gap-2">
+                    {items.map((item) => (
+                      <div key={item.name} className={`rounded-lg border p-2 text-center transition-all duration-700 ${
+                        showResult
+                          ? item.status === "empty" ? "border-red-500/50 bg-red-900/20"
+                          : item.status === "low" ? "border-amber-500/50 bg-amber-900/20"
+                          : "border-stone-600 bg-stone-800/30"
+                          : "border-stone-700 bg-stone-800/30"
+                      }`}>
+                        <span className="text-lg">{item.emoji}</span>
+                        <p className="text-[10px] text-stone-400 mt-0.5">{item.name}</p>
+                        {showResult && (
+                          <span className={`text-[9px] font-medium ${
+                            item.status === "empty" ? "text-red-400" : item.status === "low" ? "text-amber-400" : "text-green-400"
+                          }`}>
+                            {item.status.toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Capture button */}
+                <div className="px-4 py-3 border-t border-stone-700 flex justify-center">
+                  <div className={`flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-medium transition-all duration-500 ${
+                    showCapture
+                      ? showResult
+                        ? "bg-green-600 text-white"
+                        : "bg-amber-500 text-white animate-pulse"
+                      : "bg-white text-stone-900"
+                  }`}>
+                    <Camera size={16} />
+                    {showResult ? "Analysis Complete" : showAnalyzing ? "Analyzing..." : "Capture & Analyze"}
+                  </div>
+                </div>
+
+                {/* Result */}
+                {showResult && (
+                  <FadeIn show delay={0}>
+                    <div className="px-4 pb-4">
+                      <div className="rounded-lg bg-amber-900/30 border border-amber-700/50 p-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          <AlertTriangle size={16} className="text-amber-400" />
+                          <span className="text-sm font-medium text-amber-300">2 items need restocking</span>
+                        </div>
+                        <p className="text-xs text-amber-400/70 ml-6">Rice (low), Cereal (empty)</p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                )}
+              </div>
+            </FadeIn>
+          )}
+
+          {/* Auto-reorder card */}
+          {showReorder && (
+            <FadeIn show delay={0}>
+              <div className="bg-white rounded-xl border border-stone-200 p-4 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <ShoppingCart size={16} className="text-green-600" />
+                  <span className="text-sm font-semibold text-stone-900">Auto-Reorder via Knot</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-stone-600">Jasmine Rice 5lb</span>
+                    <span className="text-stone-900 font-medium">$8.97</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-stone-600">Cheerios 18oz</span>
+                    <span className="text-stone-900 font-medium">$4.28</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm pt-2 border-t border-stone-100">
+                    <span className="font-medium text-stone-700">Total</span>
+                    <span className="font-bold text-stone-900">$13.25</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <CheckCircle size={14} className="text-green-600" />
+                    <span className="text-xs text-green-700 font-medium">Under 2x average — auto-approved</span>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+          )}
+        </div>
+
+        {/* Right: iMessage */}
+        <div className="w-72 shrink-0">
+          {showIMsg && (
+            <FadeIn show delay={0}>
+              <div className="bg-stone-100 rounded-2xl border border-stone-300 shadow-lg overflow-hidden">
+                <div className="bg-stone-200 px-4 py-2.5 flex items-center gap-2.5 border-b border-stone-300">
+                  <div className="w-7 h-7 rounded-full bg-stone-900 flex items-center justify-center">
+                    <MessageCircle size={14} className="text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-stone-900">NannyCam</p>
+                    <p className="text-[10px] text-stone-500">iMessage</p>
+                  </div>
+                </div>
+                <div className="p-3 space-y-2.5 min-h-[200px]">
+                  <div className="flex justify-start">
+                    <div className="max-w-[88%] rounded-2xl rounded-bl-md bg-white border border-stone-200 px-3 py-2 text-xs leading-relaxed text-stone-800">
+                      <p className="font-semibold text-amber-600 mb-1">Pantry Restock</p>
+                      <p>Detected low/empty items:</p>
+                      <p className="mt-1">• Rice — <span className="text-amber-600">low</span></p>
+                      <p>• Cereal — <span className="text-red-600">empty</span></p>
+                      <p className="text-stone-500 mt-2">Auto-ordering from Walmart: $13.25</p>
+                      <p className="text-stone-400 mt-2 text-[10px]">10:31 AM</p>
+                    </div>
+                  </div>
+                  <FadeIn show={progress > 0.9} delay={0}>
+                    <div className="flex justify-start">
+                      <div className="max-w-[88%] rounded-2xl rounded-bl-md bg-white border border-stone-200 px-3 py-2 text-xs leading-relaxed text-stone-800">
+                        <p className="font-semibold text-green-600 mb-1">Order Placed</p>
+                        <p>Walmart order confirmed — arriving tomorrow by 5 PM.</p>
+                        <p className="text-stone-400 mt-2 text-[10px]">10:31 AM</p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                </div>
+              </div>
+            </FadeIn>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 /* ------------------------------------------------------------------ */
 /*  Scene 5: Splice — Bill Protector  (1:20 — 1:45)                  */
@@ -857,8 +1071,8 @@ const ClosingScene: Scene["component"] = ({ progress }) => {
 const SCENES: Scene[] = [
   { id: "title",       label: "Title + Problem",   duration: 15000, component: TitleScene },
   { id: "onboarding",  label: "Onboarding",        duration: 20000, component: OnboardingScene },
-  { id: "pill-cam",    label: "Pill Cam",           duration: 5000,  component: PillCamSplice },
-  { id: "pantry-cam",  label: "Pantry Cam",         duration: 5000,  component: PantryCamSplice },
+  { id: "pill-cam",    label: "Pill Cam",           duration: 20000, component: PillCamScene },
+  { id: "pantry-cam",  label: "Pantry Cam",         duration: 20000, component: PantryCamScene },
   { id: "bill",        label: "Bill Protector",     duration: 20000, component: BillProtectorScene },
   { id: "arch",        label: "Architecture",       duration: 10000, component: ArchScene },
   { id: "closing",     label: "Closing",            duration: 6000,  component: ClosingScene },
@@ -947,9 +1161,9 @@ export default function DemoVideoPage() {
               <h1 className="text-4xl font-bold text-stone-900">NannyCam Demo</h1>
             </div>
             <p className="text-stone-500 max-w-md text-center">
-              Animated intro/outro + splice markers for real footage.
+              Full animated demo — screen-record this and add your voiceover.
               <br />
-              Record this, then cut in real app clips at the marked scenes.
+              ~1:51 total runtime.
             </p>
 
             <button
@@ -963,18 +1177,10 @@ export default function DemoVideoPage() {
             <div className="mt-4 space-y-1 text-sm">
               <p className="text-xs font-medium uppercase tracking-wider text-stone-400 mb-2">Scenes</p>
               {SCENES.map((s, i) => {
-                const isSplice = s.id.includes("splice") || ["onboarding", "pill-cam", "pantry-cam", "bill"].includes(s.id);
                 return (
                   <div key={s.id} className="flex items-center gap-3 text-stone-600">
                     <span className="w-5 text-right text-stone-400">{i + 1}.</span>
-                    <span className={isSplice ? "text-stone-400" : "font-medium"}>
-                      {s.label}
-                    </span>
-                    {isSplice && (
-                      <span className="text-xs bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded">
-                        splice
-                      </span>
-                    )}
+                    <span className="font-medium">{s.label}</span>
                     <span className="text-xs text-stone-400">{(s.duration / 1000)}s</span>
                   </div>
                 );
