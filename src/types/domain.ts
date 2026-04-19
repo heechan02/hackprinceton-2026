@@ -7,6 +7,13 @@ export interface Transaction {
   description?: string;
 }
 
+export interface CartItem {
+  product_id: string;
+  name: string;
+  quantity: number;
+  unit_price?: number;
+}
+
 export interface SpendingRule {
   max_single_txn: number; // max allowed for a single transaction
   daily_limit: number; // max allowed daily spend

@@ -5,7 +5,9 @@
     {
       "step": 0,
       "name": "knot-services",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-19T13:46:20+0900",
+      "summary": "Implemented knotAuthHeader, knotFetch, getTransaction, syncTransactions, syncCart, checkout; added CartItem type; unit tests pass"
     },
     {
       "step": 1,
@@ -32,5 +34,6 @@
       "name": "smoke-e2e",
       "status": "pending"
     }
-  ]
+  ],
+  "created_at": "2026-04-19T13:46:20+0900"
 }
