@@ -1,0 +1,31 @@
+{
+  "project": "NannyCam",
+  "phase": "dashboard-polish",
+  "steps": [
+    {
+      "step": 0,
+      "name": "dashboard-page",
+      "status": "pending"
+    },
+    {
+      "step": 1,
+      "name": "onboarding-page",
+      "status": "pending"
+    },
+    {
+      "step": 2,
+      "name": "realtime-events",
+      "status": "pending"
+    },
+    {
+      "step": 3,
+      "name": "health-check-cron",
+      "status": "pending"
+    },
+    {
+      "step": 4,
+      "name": "smoke-e2e",
+      "status": "pending"
+    }
+  ]
+}

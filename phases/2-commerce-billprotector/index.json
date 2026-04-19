@@ -1,0 +1,36 @@
+{
+  "project": "NannyCam",
+  "phase": "commerce-billprotector",
+  "steps": [
+    {
+      "step": 0,
+      "name": "knot-services",
+      "status": "pending"
+    },
+    {
+      "step": 1,
+      "name": "knot-webhook",
+      "status": "pending"
+    },
+    {
+      "step": 2,
+      "name": "knot-session",
+      "status": "pending"
+    },
+    {
+      "step": 3,
+      "name": "pantry-reorder",
+      "status": "pending"
+    },
+    {
+      "step": 4,
+      "name": "command-router-commerce",
+      "status": "pending"
+    },
+    {
+      "step": 5,
+      "name": "smoke-e2e",
+      "status": "pending"
+    }
+  ]
+}
