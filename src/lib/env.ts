@@ -22,5 +22,11 @@ function parseEnv() {
   return result.data;
 }
 
-// Server-only: throws at import time if any required var is missing
-export const env = parseEnv();
+// Lazy: only validates when first accessed (avoids build-time crash)
+let _env: z.infer<typeof serverSchema> | null = null;
+export const env = new Proxy({} as z.infer<typeof serverSchema>, {
+  get(_target, prop: string) {
+    if (!_env) _env = parseEnv();
+    return _env[prop as keyof z.infer<typeof serverSchema>];
+  },
+});
