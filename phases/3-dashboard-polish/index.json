@@ -21,7 +21,10 @@
     {
       "step": 2,
       "name": "realtime-events",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-19T14:07:17+0900",
+      "summary": "Extracted events feed into EventsFeed client component with Supabase Realtime subscription for INSERT/UPDATE; initial events passed as prop from Server Component.",
+      "completed_at": "2026-04-19T14:10:00+0900"
     },
     {
       "step": 3,
