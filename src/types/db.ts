@@ -1,5 +1,6 @@
 export type EventKind = 'med_check' | 'pantry_check' | 'reorder' | 'txn_flagged' | 'system';
 export type EventStatus = 'pending' | 'in_progress' | 'completed' | 'approved' | 'blocked' | 'failed';
+export type OutboxStatus = 'pending' | 'sending' | 'sent' | 'failed';
 
 export interface Database {
   public: {
@@ -26,6 +27,7 @@ export interface Database {
           caretaker_phone?: string;
           poa_confirmed_at?: string | null;
         };
+        Relationships: [];
       };
       prescriptions: {
         Row: {
@@ -52,6 +54,7 @@ export interface Database {
           compartments_per_dose?: number;
           notes?: string | null;
         };
+        Relationships: [];
       };
       inventory_items: {
         Row: {
@@ -75,6 +78,7 @@ export interface Database {
           reorder_threshold?: number;
           typical_qty?: number;
         };
+        Relationships: [];
       };
       spending_rules: {
         Row: {
@@ -98,6 +102,7 @@ export interface Database {
           daily_limit?: number;
           blocked_categories?: string[];
         };
+        Relationships: [];
       };
       events: {
         Row: {
@@ -130,6 +135,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       transactions: {
         Row: {
@@ -165,6 +171,40 @@ export interface Database {
           reason?: string | null;
           created_at?: string;
         };
+        Relationships: [];
+      };
+      outbox: {
+        Row: {
+          id: string;
+          recipient_phone: string;
+          body: string;
+          attachment_path: string | null;
+          status: OutboxStatus;
+          error: string | null;
+          created_at: string;
+          sent_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          recipient_phone: string;
+          body: string;
+          attachment_path?: string | null;
+          status?: OutboxStatus;
+          error?: string | null;
+          created_at?: string;
+          sent_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          recipient_phone?: string;
+          body?: string;
+          attachment_path?: string | null;
+          status?: OutboxStatus;
+          error?: string | null;
+          created_at?: string;
+          sent_at?: string | null;
+        };
+        Relationships: [];
       };
       system_health: {
         Row: {
@@ -182,11 +222,15 @@ export interface Database {
           cam_kind?: string;
           last_heartbeat_at?: string;
         };
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
     Enums: {
       event_kind: EventKind;
       event_status: EventStatus;
     };
+    CompositeTypes: Record<string, never>;
   };
 }

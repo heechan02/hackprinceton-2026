@@ -29,14 +29,16 @@
     {
       "step": 3,
       "name": "photon-outbound",
-      "status": "blocked",
-      "started_at": "2026-04-19T11:37:36+0900",
-      "blocked_reason": "Spectrum returned 'Target not allowed for this project' when sending to CARETAKER_PHONE. Code is correct and typecheck passes. Fix: in the Photon dashboard, ensure iMessage is enabled for the project and the target phone number is not restricted. Error from smoke-photon.ts: sendToPhone returned { ok: false, error: 'Target not allowed for this project' }."
+      "status": "completed",
+      "summary": "src/services/photon/app.ts + outbound.ts implemented; smoke-photon.ts confirmed iMessage delivery to caretaker phone via bun; note: use bun instead of npx tsx (package requires bun ESM resolution)"
     },
     {
       "step": 4,
       "name": "photon-inbound",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-19T12:51:22+0900",
+      "summary": "0002_outbox.sql migration added; commandRouter.ts routes status/rules/reorder/approve/block intents via Supabase; worker.ts initializes Spectrum, drains outbox every 2s, handles inbound with soft-auth; outbox.ts enqueueMessage helper added; Database types updated with Relationships+Views+Functions for strict supabase-js v2 compat; 11 tests passing, typecheck clean",
+      "completed_at": "2026-04-19T23:56:35+0900"
     },
     {
       "step": 5,
