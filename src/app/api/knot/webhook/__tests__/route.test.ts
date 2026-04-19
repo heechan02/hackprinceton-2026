@@ -140,7 +140,7 @@ describe("POST /api/knot/webhook", () => {
     const json = await res.json();
     expect(json.ok).toBe(true);
     expect(mockEnqueue).toHaveBeenCalledOnce();
-    const call = mockEnqueue.mock.calls[0][0];
+    const call = mockEnqueue.mock.calls[0]![0];
     expect(call.phone).toBe("+15550000001");
     expect(call.body).toMatch(/approve/i);
     expect(call.body).toMatch(/block/i);
