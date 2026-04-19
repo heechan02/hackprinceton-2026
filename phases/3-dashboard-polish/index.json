@@ -5,7 +5,9 @@
     {
       "step": 0,
       "name": "dashboard-page",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-19T14:03:26+0900",
+      "summary": "Implemented /dashboard Server Component with patient header, today's events feed, quick stats, and spending rules sections following UI_GUIDE.md."
     },
     {
       "step": 1,
@@ -27,5 +29,6 @@
       "name": "smoke-e2e",
       "status": "pending"
     }
-  ]
+  ],
+  "created_at": "2026-04-19T14:03:26+0900"
 }
