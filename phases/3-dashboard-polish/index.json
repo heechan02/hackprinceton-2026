@@ -37,7 +37,10 @@
     {
       "step": 4,
       "name": "smoke-e2e",
-      "status": "pending"
+      "status": "completed",
+      "started_at": "2026-04-19T14:10:14+0900",
+      "summary": "Typecheck, all 35 tests, and production build pass; demos/phase-3-smoke.md created with full demo checklist results.",
+      "completed_at": "2026-04-19T14:12:00+0900"
     }
   ],
   "created_at": "2026-04-19T14:03:26+0900"
