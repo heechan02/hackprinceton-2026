@@ -1,0 +1,7 @@
+{
+  "step": 3,
+  "name": "nightly-summary-cron",
+  "exitCode": 0,
+  "stdout": "{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":34901,\"duration_api_ms\":31263,\"num_turns\":11,\"result\":\"Done. Implemented `GET /api/cron/nightly-summary/route.ts`:\\n\\n- Loads today's events (midnight→now) for the active patient\\n- If no events → returns `\\\"Quiet day — no events recorded.\\\"` directly\\n- Otherwise builds an event log and calls Gemini for a warm one-paragraph summary\\n- Enqueues one outbox message to `CARETAKER_PHONE`\\n- Returns `{ ok: true, summary }`\\n- Typecheck passes, step marked completed\",\"stop_reason\":null,\"session_id\":\"1510db57-c33e-4244-8478-f4a3065aa084\",\"total_cost_usd\":0.3106025,\"usage\":{\"input_tokens\":1169,\"cache_creation_input_tokens\":17802,\"cache_read_input_tokens\":281490,\"output_tokens\":2110,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":17802},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-4-6\":{\"inputTokens\":1169,\"outputTokens\":2110,\"cacheReadInputTokens\":281490,\"cacheCreationInputTokens\":17802,\"webSearchRequests\":0,\"costUSD\":0.3106025,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"fast_mode_state\":\"off\",\"uuid\":\"fda1d06e-4d56-4b03-80ec-8cf284e0d37f\"}\n",
+  "stderr": ""
+}
