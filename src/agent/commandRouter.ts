@@ -1,4 +1,5 @@
 import { adminClient } from "@/services/supabase/admin";
+import { inventoryAssessment } from "@/services/gemini/pantry";
 import type { EventKind, EventStatus } from "@/types/db";
 
 export async function route(input: {
@@ -46,6 +47,51 @@ export async function route(input: {
     }
   }
 
+  // reorder (bare) — assess last pantry snapshot and report low/empty items
+  if (/^reorder$/i.test(t)) {
+    try {
+      // Get last pantry_check event with a snapshot_url
+      const { data: events, error: evErr } = await adminClient
+        .from("events")
+        .select("snapshot_url, patient_id")
+        .eq("kind", "pantry_check")
+        .not("snapshot_url", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (evErr) throw evErr;
+      const lastEvent = events?.[0];
+      if (!lastEvent?.snapshot_url) return "No pantry snapshot available. Capture a pantry image first.";
+
+      // Fetch image and convert to base64
+      const imageRes = await fetch(lastEvent.snapshot_url);
+      if (!imageRes.ok) throw new Error(`Failed to fetch snapshot: ${imageRes.statusText}`);
+      const arrayBuf = await imageRes.arrayBuffer();
+      const imageBase64 = Buffer.from(arrayBuf).toString("base64");
+
+      // Load inventory items for the patient
+      const { data: inventoryItems, error: invErr } = await adminClient
+        .from("inventory_items")
+        .select("name")
+        .eq("patient_id", lastEvent.patient_id);
+      if (invErr) throw invErr;
+
+      const items = (inventoryItems ?? []).map((i) => ({ name: i.name }));
+      if (items.length === 0) return "No inventory items configured.";
+
+      const assessment = await inventoryAssessment(imageBase64, items);
+      const needReorder = assessment.filter(
+        (r) => r.stockLevel === "empty" || r.stockLevel === "low"
+      );
+
+      if (needReorder.length === 0) return "Pantry looks well-stocked — nothing to reorder.";
+
+      const itemList = needReorder.map((r) => `${r.item} (${r.stockLevel})`).join(", ");
+      return `Pantry reorder triggered for: ${itemList}`;
+    } catch (err) {
+      return `Error during reorder: ${err instanceof Error ? err.message : String(err)}`;
+    }
+  }
+
   // reorder <item>
   const reorderMatch = t.match(/^reorder\s+(.+)/i);
   if (reorderMatch) {
@@ -82,7 +128,7 @@ export async function route(input: {
         .select("id");
       if (error) throw error;
       if (!data || data.length === 0) return `No event found with id ${id}.`;
-      return `Approved event ${id}.`;
+      return `✓ Approved.`;
     } catch (err) {
       return `Error approving: ${err instanceof Error ? err.message : String(err)}`;
     }
@@ -100,7 +146,7 @@ export async function route(input: {
         .select("id");
       if (error) throw error;
       if (!data || data.length === 0) return `No event found with id ${id}.`;
-      return `Blocked event ${id}.`;
+      return `✗ Blocked.`;
     } catch (err) {
       return `Error blocking: ${err instanceof Error ? err.message : String(err)}`;
     }

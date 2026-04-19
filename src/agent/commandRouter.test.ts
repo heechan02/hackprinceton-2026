@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
+// Mock inventoryAssessment
+vi.mock("@/services/gemini/pantry", () => ({
+  inventoryAssessment: vi.fn(),
+}));
+
 // Mock env before imports that use it
 vi.mock("@/lib/env", () => ({
   env: {
@@ -128,7 +133,7 @@ describe("commandRouter", () => {
     expect(reply).toContain("queued");
   });
 
-  it("approve intent updates event status", async () => {
+  it("approve intent updates event status and replies ✓ Approved.", async () => {
     const { adminClient } = await import("@/services/supabase/admin");
     (adminClient.from as ReturnType<typeof vi.fn>).mockReturnValue({
       update: () => ({
@@ -140,11 +145,10 @@ describe("commandRouter", () => {
     });
 
     const reply = await route({ from: "+1555", text: "approve abc123" });
-    expect(reply).toContain("Approved");
-    expect(reply).toContain("abc123");
+    expect(reply).toBe("✓ Approved.");
   });
 
-  it("block intent updates event status", async () => {
+  it("block intent updates event status and replies ✗ Blocked.", async () => {
     const { adminClient } = await import("@/services/supabase/admin");
     (adminClient.from as ReturnType<typeof vi.fn>).mockReturnValue({
       update: () => ({
@@ -156,8 +160,116 @@ describe("commandRouter", () => {
     });
 
     const reply = await route({ from: "+1555", text: "block xyz789" });
-    expect(reply).toContain("Blocked");
-    expect(reply).toContain("xyz789");
+    expect(reply).toBe("✗ Blocked.");
+  });
+
+  it("bare reorder runs inventoryAssessment and reports low items", async () => {
+    const { adminClient } = await import("@/services/supabase/admin");
+    const { inventoryAssessment } = await import("@/services/gemini/pantry");
+
+    // Mock global fetch for snapshot download
+    const fakeImageBuf = Buffer.from("fake-image");
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      statusText: "OK",
+      arrayBuffer: async () => fakeImageBuf.buffer,
+    } as unknown as Response);
+
+    (adminClient.from as ReturnType<typeof vi.fn>).mockImplementation(
+      (table: string) => {
+        if (table === "events") {
+          return {
+            select: () => ({
+              eq: () => ({
+                not: () => ({
+                  order: () => ({
+                    limit: () =>
+                      Promise.resolve({
+                        data: [{ snapshot_url: "https://example.com/snap.jpg", patient_id: "p1" }],
+                        error: null,
+                      }),
+                  }),
+                }),
+              }),
+            }),
+          };
+        }
+        if (table === "inventory_items") {
+          return {
+            select: () => ({
+              eq: () =>
+                Promise.resolve({
+                  data: [{ name: "milk" }, { name: "eggs" }],
+                  error: null,
+                }),
+            }),
+          };
+        }
+        return {};
+      }
+    );
+
+    (inventoryAssessment as ReturnType<typeof vi.fn>).mockResolvedValue([
+      { item: "milk", stockLevel: "low", confidence: "high" },
+      { item: "eggs", stockLevel: "ok", confidence: "high" },
+    ]);
+
+    const reply = await route({ from: "+1555", text: "reorder" });
+    expect(reply).toContain("milk");
+    expect(reply).toContain("low");
+    expect(reply).not.toContain("eggs");
+  });
+
+  it("bare reorder reports all stocked when nothing is low", async () => {
+    const { adminClient } = await import("@/services/supabase/admin");
+    const { inventoryAssessment } = await import("@/services/gemini/pantry");
+
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      statusText: "OK",
+      arrayBuffer: async () => Buffer.from("fake").buffer,
+    } as unknown as Response);
+
+    (adminClient.from as ReturnType<typeof vi.fn>).mockImplementation(
+      (table: string) => {
+        if (table === "events") {
+          return {
+            select: () => ({
+              eq: () => ({
+                not: () => ({
+                  order: () => ({
+                    limit: () =>
+                      Promise.resolve({
+                        data: [{ snapshot_url: "https://example.com/snap.jpg", patient_id: "p1" }],
+                        error: null,
+                      }),
+                  }),
+                }),
+              }),
+            }),
+          };
+        }
+        if (table === "inventory_items") {
+          return {
+            select: () => ({
+              eq: () =>
+                Promise.resolve({
+                  data: [{ name: "milk" }],
+                  error: null,
+                }),
+            }),
+          };
+        }
+        return {};
+      }
+    );
+
+    (inventoryAssessment as ReturnType<typeof vi.fn>).mockResolvedValue([
+      { item: "milk", stockLevel: "ok", confidence: "high" },
+    ]);
+
+    const reply = await route({ from: "+1555", text: "reorder" });
+    expect(reply).toContain("well-stocked");
   });
 
   it("unknown intent returns help text", async () => {
