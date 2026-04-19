@@ -7,7 +7,8 @@
       "name": "motion-trigger",
       "status": "completed",
       "started_at": "2026-04-19T13:35:40+0900",
-      "summary": "Added frame-diff motion detection (2s interval, >30 brightness units, motionThreshold prop) to WebcamCapture; only fires capture when motion detected under auto mode."
+      "summary": "Added frame-diff motion detection (2s interval, >30 brightness units, motionThreshold prop) to WebcamCapture; only fires capture when motion detected under auto mode.",
+      "completed_at": "2026-04-19T13:36:26+0900"
     },
     {
       "step": 1,
