@@ -16,7 +16,7 @@
       "status": "completed",
       "started_at": "2026-04-19T14:04:55+0900",
       "summary": "Implemented 4-step onboarding page (POA confirmation, patient info, medication schedule, spending rules) and POST /api/onboarding route that upserts patient, prescription, and spending_rules in Supabase.",
-      "completed_at": "2026-04-19T14:20:00+0900"
+      "completed_at": "2026-04-19T14:07:17+0900"
     },
     {
       "step": 2,
