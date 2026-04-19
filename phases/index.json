@@ -3,7 +3,8 @@
   "phases": [
     {
       "dir": "0-mvp-spine",
-      "status": "pending"
+      "status": "completed",
+      "completed_at": "2026-04-19T13:02:42+0900"
     },
     {
       "dir": "1-vision-meds",
