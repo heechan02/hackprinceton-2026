@@ -6,7 +6,7 @@ An AI-powered eldercare monitoring dashboard built at HackPrinceton 2026. NannyC
 
 ## Tech Stack
 
-- **Next.js 15** (App Router, Server Components)
+- **Next.js 16** (App Router, Server Components)
 - **TypeScript** + **Tailwind CSS**
 - **Supabase** (Postgres + Realtime)
 - **Gemini API** (vision analysis + text)
