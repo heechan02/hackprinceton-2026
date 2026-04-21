@@ -36,7 +36,7 @@ async function main() {
             const im = imessage(app);
             const user = await im.user(row.recipient_phone);
             const space = await im.space(user);
-            if (row.attachment_path) {
+            if (row.attachment_path && !row.attachment_path.startsWith("http")) {
               await space.send(text(row.body), attachment(row.attachment_path));
             } else {
               await space.send(text(row.body));
@@ -67,6 +67,7 @@ async function main() {
 
   // Inbound loop
   for await (const [space, message] of app.messages) {
+    console.log("[inbound] incoming:", message.sender.id, message.content);
     if (message.content.type !== "text") continue;
     if (message.sender.id !== env.CARETAKER_PHONE) continue; // soft auth
     const msgText = message.content.text;

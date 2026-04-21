@@ -4,7 +4,7 @@ import { env } from "@/lib/env";
 
 const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
 
-const MODEL_PRIMARY = "gemini-2.0-flash";
+const MODEL_PRIMARY = "gemini-2.5-flash-lite";
 
 export class GeminiParseError extends Error {
   constructor(
