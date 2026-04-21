@@ -2,7 +2,7 @@
 
 An AI-powered eldercare monitoring dashboard built at HackPrinceton 2026. NannyCam helps adult children remotely monitor and assist elderly parents through vision analysis, automated medication tracking, smart spending rules, and iMessage notifications.
 
-**[Live Demo](https://hackprinceton-2026.vercel.app)** | **[YouTube Demo](https://www.youtube.com/watch?v=Q93FDD8e_7c)**
+**[Live Demo](https://hackprinceton-2026.vercel.app)** | **[Try It](https://hackprinceton-2026.vercel.app/onboarding)** | **[YouTube Demo](https://www.youtube.com/watch?v=Q93FDD8e_7c)**
 
 ## Tech Stack
 
